@@ -119,9 +119,13 @@ export default Vue.extend({
         const total = this.pagination.total = this.data.length
         let max = this.pagination.size * this.pagination.page
         max = max > total ? total : max
-        return this.data.slice((this.pagination.page - 1) * this.pagination.size, max)
+        const result = this.data.slice((this.pagination.page - 1) * this.pagination.size, max)
+        this.$emit('data-change', result)
+        return result
       } else {
-        return this.response.content
+        const result = this.response.content
+        this.$emit('data-change', result)
+        return result
       }
     },
     params_ (): any {
