@@ -1,13 +1,15 @@
 {
   "name": "vue-datalist",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "一个支持分页和从服务加载数据的列表组件",
   "author": "ldwqh0 <ldwqh0@outlook.com>",
   "main": "lib/index.js",
   "bugs": {
     "url": "https://github.com/ldwqh0/vue-datalist/issues"
   },
-  "licenses": "MIT",
+  "licenses": [
+    "MIT"
+  ],
   "homepage": "https://github.com/ldwqh0/vue-datalist",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -28,7 +30,7 @@
   "devDependencies": {
     "@types/lodash": "^4.14.165",
     "@types/qs": "^6.9.5",
-    "axios": "^0.15.0",
+    "axios": "^0.21.1",
     "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^5.0.0",
     "file-loader": "^6.2.0",
