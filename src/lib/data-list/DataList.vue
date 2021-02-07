@@ -18,7 +18,7 @@
 
   interface Sort {
     prop?: string,
-    order?: 'ascending' | 'asc' | 'descending' | 'desc'
+    order?: 'ascending' | 'asc' | 'descending' | 'desc' | null
   }
 
   interface Response {
