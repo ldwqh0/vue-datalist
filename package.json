@@ -1,6 +1,6 @@
 {
   "name": "vue-datalist",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "一个支持分页和从服务加载数据的列表组件",
   "author": "ldwqh0 <ldwqh0@outlook.com>",
   "main": "lib/index.js",

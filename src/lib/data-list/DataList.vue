@@ -41,7 +41,8 @@
     draw: number,
     timeout: number | null,
     response: Response,
-    pagination: Pagination
+    pagination: Pagination,
+    loading: boolean,
   }
 
   export default Vue.extend({
@@ -84,6 +85,7 @@
     },
     data (): DataList {
       return {
+        loading: false,
         timeout: null,
         draw: 0,
         response: {
@@ -184,12 +186,14 @@
       reloadAjaxData (): void {
         if (this.ajax_ !== null) {
           const http = this.http || config.httpInstance
+          this.$emit('loading')
           http.request(this.ajax_).then(({ data, config }: AxiosResponse) => {
             if (config.params.draw === this.draw) {
               this.response = data
               this.pagination.total = data.totalElements
             }
-          })
+          }).catch(e => this.$emit('error', e))
+              .finally(() => this.$emit('complete'))
         }
       },
       /**
