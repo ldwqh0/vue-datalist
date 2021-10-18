@@ -12,9 +12,10 @@
 <script lang="ts">
   import Vue, { PropType } from 'vue'
   import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
-  import { cloneDeep } from 'lodash'
+  import cloneDeep from 'lodash/cloneDeep'
   import qs from 'qs'
   import config from './config'
+  import isNil from 'lodash/isNil'
 
   interface Sort {
     prop?: string,
@@ -34,7 +35,7 @@
   }
 
   interface AjaxFunction {
-    (draw: number, pagination: Pagination, sererParams: { [key: string]: unknown }, sort: Sort[],): AxiosRequestConfig
+    (pagination: Pagination, sererParams: { [key: string]: unknown }, sort: Sort[],): AxiosRequestConfig
   }
 
   interface DataList {
@@ -96,7 +97,7 @@
         pagination: {
           page: 1,
           size: 10,
-          total: 0,
+          total: 0
         }
       }
     },
@@ -125,8 +126,8 @@
         return []
       },
       data_ (): any[] {
-        if (this.data !== null) {
-          const total = this.pagination.total = this.data.length
+        if (!isNil(this.data)) {
+          const total = this.data.length
           let max = this.pagination.size * this.pagination.page
           max = max > total ? total : max
           const result = this.data.slice((this.pagination.page - 1) * this.pagination.size, max)
@@ -143,14 +144,13 @@
           ...this.serverParams,
           page: this.pagination.page - 1,
           size: this.pagination.size,
-          sort: this.sort_,
-          draw: ++this.draw
+          sort: this.sort_
         }
       },
 
       ajax_ (): AxiosRequestConfig | null {
         // 如果传入的ajax是一个函数，需要调用该函数构建ajax请求需要的对象
-        if (this.ajax !== null) {
+        if (!isNil(this.ajax)) {
           if (typeof this.ajax === 'function') {
             const sort: Sort[] = []
             if (Array.isArray(this.sort)) {
@@ -159,7 +159,7 @@
             if ((typeof this.sort) === 'object') {
               sort.push(this.sort as Sort)
             }
-            return this.ajax(this.draw, this.pagination, this.serverParams, sort)
+            return this.ajax(this.pagination, this.serverParams, sort)
           } else if (typeof this.ajax === 'object') {
             const ajax = cloneDeep(this.ajax)
             if (ajax.params === undefined || ajax.params === null) {
@@ -182,18 +182,46 @@
         return null
       }
     },
+    watch: {
+      ajax_ () {
+        this.debounceReload()
+      },
+      serverParams: {
+        handler () {
+          this.pagination.page = 1
+        },
+        deep: true
+      },
+      ajax () {
+        this.pagination.page = 1
+      },
+      data () {
+        this.pagination.total = this.data?.length ?? 0
+      }
+    },
+    created () {
+      this.reloadAjaxData()
+    },
+    beforeDestroy () {
+      if (this.timeout) {
+        window.clearTimeout(this.timeout)
+      }
+    },
     methods: {
       reloadAjaxData (): void {
-        if (this.ajax_ !== null) {
+        if (!isNil(this.ajax_)) {
           const http = this.http || config.httpInstance
           this.$emit('loading')
+          if (!isNil(this.ajax_?.params)) {
+            this.ajax_!.params.draw = ++this.draw
+          }
           http.request(this.ajax_).then(({ data, config }: AxiosResponse) => {
             if (config.params.draw === this.draw) {
               this.response = data
               this.pagination.total = data.totalElements
             }
-          }).catch(e => this.$emit('error', e))
-              .finally(() => this.$emit('complete'))
+          }).catch((e: Error) => this.$emit('error', e))
+            .finally(() => this.$emit('complete'))
         }
       },
       /**
@@ -210,28 +238,6 @@
           window.clearTimeout(this.timeout)
         }
         this.timeout = window.setTimeout(this.reloadAjaxData, this.debounceTime)
-      }
-    },
-    watch: {
-      ajax_ () {
-        this.debounceReload()
-      },
-      serverParams: {
-        handler () {
-          this.pagination.page = 1
-        },
-        deep: true
-      },
-      ajax () {
-        this.pagination.page = 1
-      }
-    },
-    created () {
-      this.reloadAjaxData()
-    },
-    beforeDestroy () {
-      if (this.timeout) {
-        window.clearTimeout(this.timeout)
       }
     }
   })

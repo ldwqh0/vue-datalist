@@ -50,6 +50,7 @@ module.exports = {
   ],
   target: ['es5'],
   output: {
+    chunkFormat: 'array-push',
     libraryTarget: 'umd',
     path: path.resolve(__dirname, '../', 'lib')
   }
