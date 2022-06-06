@@ -120,7 +120,7 @@
       sort_ (): string[] {
         const createSort = ({ prop, order = 'asc' }: Sort = {}): string | undefined => {
           if (isNil(prop)) {
-            throw new Error('the sort prop can not be undefined or null')
+            console.debug('the sort prop can not be undefined or null')
           } else {
             if (order === 'ascending' || order === 'asc') {
               return `${prop},asc`
