@@ -1,6 +1,6 @@
 import { config, DataList } from '@/lib/data-list'
 import axios from 'axios'
-import _Vue from 'vue'
+import _Vue, { PluginObject } from 'vue'
 
 export { DataList, config }
 
@@ -9,5 +9,4 @@ export default {
     config.httpInstance = httpInstance
     Vue.component('DataList', DataList)
   }
-}
-
+} as PluginObject<any>

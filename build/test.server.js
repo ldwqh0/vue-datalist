@@ -12,6 +12,11 @@ const error = {
 }
 
 module.exports = (app) => {
+  app.get('/users/error', (req, rsp) => {
+    rsp.statusCode = 400
+    rsp.write(JSON.stringify(error))
+    rsp.end()
+  })
   app.get('/users', (req, rsp) => {
     let { page, size } = req.query
     let i = page * size
@@ -22,8 +27,6 @@ module.exports = (app) => {
         name: 'user' + i
       })
     }
-    // rsp.statusCode = 400
-    // rsp.write(JSON.stringify(error))
     rsp.write(JSON.stringify({
       totalElements: 100,
       content

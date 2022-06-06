@@ -11,5 +11,9 @@ export default new Router({
     path: '/local',
     name: 'local',
     component: () => import('./sample/LocalData.vue')
+  }, {
+    path: '/error',
+    name: 'error',
+    component: () => import('./sample/ErrorData.vue')
   }]
 })

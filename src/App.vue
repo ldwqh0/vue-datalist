@@ -1,19 +1,21 @@
 <template>
-  <el-container>
-    <el-aside width="200px">
-      <el-menu router>
-        <el-menu-item index="1" route="/server">服务器数据</el-menu-item>
-        <el-menu-item index="2" route="/local">本地数据</el-menu-item>
-      </el-menu>
-    </el-aside>
-    <el-main>
-      <router-view/>
-    </el-main>
-  </el-container>
+  <div class="container">
+    <div>
+      <router-link to="/server">服务器数据</router-link>
+      <router-link to="/local">本地数据</router-link>
+      <router-link to="/error">错误信息</router-link>
+    </div>
+    <div>
+      <router-view />
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
-export default {}
+  export default {}
 </script>
 <style lang="less">
+  .container {
+
+  }
 </style>
